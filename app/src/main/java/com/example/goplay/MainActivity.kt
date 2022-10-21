@@ -26,11 +26,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.rvMoviesList.layoutManager = LinearLayoutManager(this)
-        binding.rvMoviesList.setHasFixedSize(true)
-        getMovieData { movies : List<Movie> ->
-            binding.rvMoviesList.adapter = MovieAdapter(movies)
-        }
+        replaceFragment(NowPlayingFragment())
 
         binding.btnFragment1.setOnClickListener{
             replaceFragment(NowPlayingFragment())
@@ -66,17 +62,4 @@ class MainActivity : AppCompatActivity() {
         fragmentTransaction.commit()
     }
 
-    private fun getMovieData(callback: (List<Movie>) -> Unit){
-        val apiService = MovieApiService.getInstance().create(MovieApiInterface::class.java)
-        apiService.getMovieNowPlaying().enqueue(object : Callback<MovieResponse> {
-            override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
-
-            }
-
-            override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
-                return callback(response.body()!!.movies)
-            }
-
-        })
-    }
 }
